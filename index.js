@@ -1,6 +1,9 @@
 const { Client, GatewayIntentBits, ActivityType, Collection} = require('discord.js');
 const { Client: NotionClient } = require('@notionhq/client');
+
 const dotenv = require('dotenv').config();
+const notion = new NotionClient({ auth: process.env.NOTION_TOKEN });
+console.log (process.env.NOTION_TOKEN);
 const fs = require('fs');
 
 // New user
@@ -12,11 +15,8 @@ const client = new Client({
   ]
 });
 
-// // Tworzenie klienta Notion
-// const notion = new NotionClient({ 
-//   auth: process.env.NOTION_TOKEN,
-// });
 
+//Command import
 client.commands = new Collection();
 
 for (const folder of fs.readdirSync('./commands')) {
@@ -42,25 +42,7 @@ client.once('ready', () => {
 
 
 
-// client.application.commands.create({
-//   name: 'Whitelist',
-//   description: 'Dodaj siebie do bazy graczy którzy mają być dodani do whitelisty',
-//   options: [
-//     {
-//       name: 'Minecrat',
-//       description: 'Twój nick w Minecraft',
-//       type: 'STRING',
-//       required: true,
-//     },
-//     {
-//       name: 'nicktwitch',
-//       description: 'Nick gracza na Twitch',
-//       type: 'STRING',
-//       required: true,
-//     },
-//    ],
-// });
-// });
+
 
 // Slash builder
 client.on('interactionCreate', async interaction => {
@@ -72,6 +54,36 @@ client.on('interactionCreate', async interaction => {
       return console.error('Nie znaleziono komendy. Najbliższa w Płocku.');
   }
 
+  if (interaction.commandName === 'whitelist') {
+    const minecraftNick = interaction.options.getString('minecraft');
+    const twitchNick = interaction.options.getString('twitch');
+
+    // Add the user data to the Notion database
+    const databaseId = process.env.NOTION_DATABASE;
+    const newEntry = {
+      Minecraft: {
+        title: [{ text: { content: minecraftNick } }],
+      },
+      Twitch: {
+        title: [{ text: { content: twitchNick } }],
+      },
+    };
+    await notion.pages.create({
+      parent: { database_id: databaseId },
+      properties: newEntry,
+    });
+
+    await interaction.reply({
+      content: `User ${minecraftNick} (${twitchNick}) has been added to the database!`, ephemeral: true
+    });
+    try {
+      await command.execute(interaction);
+  } catch (error) {
+      console.error(error);
+      await interaction.reply({ content: 'Wystąpił błąd...', ephemeral: true });
+  }
+  }
+
   try {
       await command.execute(interaction);
   } catch (error) {
@@ -79,23 +91,6 @@ client.on('interactionCreate', async interaction => {
       await interaction.reply({ content: 'Wystąpił błąd...', ephemeral: true });
   }
 });
-//   const nickMinecraft = options.getString('nickminecraft');
-//   const nickTwitch = options.getString('nicktwitch');
 
-//   // Dodawanie danych do bazy danych Notion
-//   const databaseId = process.env.NOTION_DATABASE; // ZAMIENIC NA SWOJE ID BAZY DANYCH ZE STRONY NOTION
-//   const newRecord = {
-//     'Nick w Minecraft': { title: [{ type: 'text', text: { content: nickMinecraft } }] },
-//     'Nick na Twitch': { title: [{ type: 'text', text: { content: nickTwitch } }] },
-//   };
-//   await notion.databases.createEntry(databaseId, { properties: newRecord });
-
-//   // Odpowiedź na komendę typu "slash"
-//   await interaction.reply({
-//     content: 'Twój nick został dodany do bazy danych.',
-//     ephemeral: true, // Odpowiedź będzie widoczna tylko dla autora komendy
-//   });
-// });
-
-// Logowanie bota do Discorda
+// Login
 client.login(process.env.DISCORD_TOKEN);
