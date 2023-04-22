@@ -38,13 +38,12 @@ client.once('ready', () => {
     const days = Math.floor(duration.asDays());
     const hours = duration.hours();
     const minutes = duration.minutes();
-    const seconds = duration.seconds();
-    const presenceText = `Do startu serwera pozostało: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+    const presenceText = `Do startu serwera pozostało: ${days}d ${hours}h ${minutes}m`;
     client.user.setPresence({ activities:
       [{
         name: presenceText
       }]});
-  }, 1000);
+  }, 60000);
   });
 
 
