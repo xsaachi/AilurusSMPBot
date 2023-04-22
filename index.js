@@ -65,7 +65,7 @@ client.on('interactionCreate', async interaction => {
         title: [{ text: { content: minecraftNick } }],
       },
       Twitch: {
-        title: [{ text: { content: twitchNick } }],
+        rich_text: [{ text: { content: twitchNick } }],
       },
     };
     await notion.pages.create({
@@ -74,22 +74,11 @@ client.on('interactionCreate', async interaction => {
     });
 
     await interaction.reply({
-      content: `User ${minecraftNick} (${twitchNick}) has been added to the database!`, ephemeral: true
+      content: `Nick ${minecraftNick} (${twitchNick}) dodany do bazy!`, ephemeral: true
     });
-    try {
-      await command.execute(interaction);
-  } catch (error) {
-      console.error(error);
-      await interaction.reply({ content: 'Wystąpił błąd...', ephemeral: true });
-  }
   }
 
-  try {
-      await command.execute(interaction);
-  } catch (error) {
-      console.error(error);
-      await interaction.reply({ content: 'Wystąpił błąd...', ephemeral: true });
-  }
+  
 });
 
 // Login
