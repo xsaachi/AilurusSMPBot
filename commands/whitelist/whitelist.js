@@ -3,9 +3,7 @@ const dotenv = require('dotenv').config();
 const { Client: NotionClient } = require('@notionhq/client');
 
 
-
 module.exports = {
-  
     data: new SlashCommandBuilder()
         .setName('whitelist')
         .setDescription('Dodaj siebie do bazy graczy, którzy mają być dodani do whitelisty.')
@@ -17,8 +15,6 @@ module.exports = {
             option.setName('twitch')
                 .setDescription('Twój twitch tag.')
                 .setRequired(true)),
-        
-
 }
 
 

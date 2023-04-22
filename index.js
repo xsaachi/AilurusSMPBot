@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, ActivityType, Collection} = require('discord.js');
+const { Client, GatewayIntentBits, ActivityType, Collection, Message} = require('discord.js');
 const { Client: NotionClient } = require('@notionhq/client');
 const dotenv = require('dotenv').config();
 const notion = new NotionClient({ auth: process.env.NOTION_TOKEN });
@@ -63,6 +63,8 @@ client.on('interactionCreate', async interaction => {
 
   if (interaction.commandName === 'whitelist') {
     try {
+      await interaction.reply({ content: 'Oczekiwanie na dodanie do bazy...'})
+
       const minecraftNick = interaction.options.getString('minecraft');
       const twitchNick = interaction.options.getString('twitch');
   
@@ -80,23 +82,19 @@ client.on('interactionCreate', async interaction => {
             start: new Date().toISOString(),
           },
         },
-
       };
       await notion.pages.create({
         parent: { database_id: databaseId },
         properties: newEntry,
       });
-  
-      await interaction.reply({
+      await interaction.editReply({
         content: `Nick ${minecraftNick} (${twitchNick}) dodany do bazy!`
       });
     } catch (error) {
       console.error(error);
-      await interaction.reply({ content: 'Wystąpił błąd...', ephemeral: true });
+      await interaction.reply({ content: 'Wystąpił błąd...'});
     }
   }
-
-  
 });
 
 // Login
