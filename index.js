@@ -88,7 +88,7 @@ client.on('interactionCreate', async interaction => {
       });
   
       await interaction.reply({
-        content: `Nick ${minecraftNick} (${twitchNick}) dodany do bazy!`, ephemeral: true
+        content: `Nick ${minecraftNick} (${twitchNick}) dodany do bazy!`
       });
     } catch (error) {
       console.error(error);
