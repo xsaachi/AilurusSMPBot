@@ -42,8 +42,7 @@ client.once('ready', () => {
     const presenceText = `Do startu serwera pozostało: ${days}d ${hours}h ${minutes}m ${seconds}s`;
     client.user.setPresence({ activities:
       [{
-        name: presenceText,
-        type: ActivityType.Streaming
+        name: presenceText
       }]});
   }, 1000);
   });
