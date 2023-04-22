@@ -12,6 +12,7 @@
     "@notionhq/client": "^2.2.4",
     "discord.js": "^14.9.0",
     "dotenv": "^16.0.3",
+    "moment": "^2.29.4",
     "notion": "^0.0.1"
   }
 }
