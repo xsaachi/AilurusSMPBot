@@ -31,19 +31,11 @@ for (const folder of fs.readdirSync('./commands')) {
 // Login event
 client.once('ready', () => {
   console.log(`Logged in as: ${client.user.tag}`);
-  setInterval(() => {
-    const now = moment();
-    const targetDate = moment('2023-05-12T19:00:00+00:00');
-    const duration = moment.duration(targetDate.diff(now));
-    const days = Math.floor(duration.asDays());
-    const hours = duration.hours();
-    const minutes = duration.minutes();
-    const presenceText = `Do startu serwera pozostało: ${days}d ${hours}h ${minutes}m`;
-    client.user.setPresence({ activities:
-      [{
-        name: presenceText
-      }]});
-  }, 60000);
+    client.user.setActivity({ 
+      name: 'AilurusSMP',
+      type: ActivityType.Streaming,
+      });
+  
   });
 
 
